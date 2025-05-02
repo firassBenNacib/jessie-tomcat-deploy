@@ -23,7 +23,6 @@ Memory allocation is based on the environment:
 
 * [Structure](#structure)
 * [Setup](#setup)
-* [Features](#features)
 * [Environment Configs](#environment-configs)
 * [Author](#author)
 
@@ -63,14 +62,6 @@ cd jessie-tomcat-deploy
 
 Use `PROD` to simulate a production-like setup.
 
-
-## Features
-
-* Full automation with Ansible
-* Simulated legacy Debian Jessie container
-* Systemd-managed Tomcat 9 service
-* WAR deployment and service validation
-* Environment-based JVM configuration
 
 
 ## Environment Configs
