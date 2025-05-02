@@ -4,17 +4,6 @@ Automate the setup of a Tomcat 9 service on a legacy Debian Jessie system, using
 
 
 
-## Table of Contents
-
-* [Overview](#overview)
-* [Structure](#structure)
-* [Setup](#setup)
-* [Features](#features)
-* [Environment Configs](#environment-configs)
-* [Author](#author)
-
-
-
 ## Overview
 
 This project builds a Docker container running Debian Jessie with `systemd`, simulating a legacy production machine. Inside it:
@@ -28,6 +17,16 @@ Memory allocation is based on the environment:
 
 * `DEV`: 256m heap
 * `PROD`: 512m heap
+
+
+## Table of Contents
+
+* [Structure](#structure)
+* [Setup](#setup)
+* [Features](#features)
+* [Environment Configs](#environment-configs)
+* [Author](#author)
+
 
 
 
