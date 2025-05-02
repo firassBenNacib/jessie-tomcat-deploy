@@ -1,23 +1,23 @@
 # Jessie Tomcat Deploy
 
-Automate the setup of a Tomcat 9 service on a legacy Debian Jessie system, using Ansible inside a Docker container. This project builds a simulated environment for testing WAR deployments under controlled JVM heap settings.
-
-
+Automate the setup of Tomcat 9 on a legacy Debian Jessie system. This project uses Ansible inside a Docker container to simulate a production-like environment and deploy a WAR file.
 
 ## Overview
 
-This project builds a Docker container running Debian Jessie with `systemd`, simulating a legacy production machine. Inside it:
+This project builds a Docker container running `debian:jessie` with `systemd`, simulating a legacy server.
 
-* Installs Java 8 and Tomcat 9
-* Deploys a sample WAR
-* Runs tests to verify deployment
-* Uses Ansible for full provisioning
+Inside the container:
 
-Memory allocation is based on the environment:
+* Installs OpenJDK 8 and Tomcat 9
+* Configures Tomcat as a `systemd` service
+* Deploys a sample WAR file
+* Uses Ansible for full automation
+* Runs post-deployment tests
 
-* `DEV`: 256m heap
-* `PROD`: 512m heap
+JVM heap size is automatically set based on the environment:
 
+* `DEV`: `-Xms256m -Xmx256m`
+* `PROD`: `-Xms512m -Xmx512m`
 
 ## Table of Contents
 
