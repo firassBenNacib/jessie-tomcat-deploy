@@ -4,8 +4,6 @@ Automate the setup of a Tomcat 9 service on a legacy Debian Jessie system, using
 
 
 
----
-
 ## Table of Contents
 
 * [Overview](#overview)
@@ -15,7 +13,7 @@ Automate the setup of a Tomcat 9 service on a legacy Debian Jessie system, using
 * [Environment Configs](#environment-configs)
 * [Author](#author)
 
----
+
 
 ## Overview
 
@@ -31,7 +29,7 @@ Memory allocation is based on the environment:
 * `DEV`: 256m heap
 * `PROD`: 512m heap
 
----
+
 
 ## Structure
 
@@ -48,7 +46,6 @@ jessie-tomcat-deploy/
     └── sample.war
 ```
 
----
 
 ## Setup
 
@@ -67,7 +64,6 @@ cd jessie-tomcat-deploy
 
 Use `PROD` to simulate a production-like setup.
 
----
 
 ## Features
 
@@ -77,8 +73,6 @@ Use `PROD` to simulate a production-like setup.
 * WAR deployment and service validation
 * Environment-based JVM configuration
 
----
-
 
 ## Environment Configs
 
@@ -86,8 +80,6 @@ Use `PROD` to simulate a production-like setup.
 | -------- | ---------------- | ---- | ---- |
 | `ENV`    | Environment name | DEV  | PROD |
 | `JVM`    | Max heap size    | 256m | 512m |
-
----
 
 
 
