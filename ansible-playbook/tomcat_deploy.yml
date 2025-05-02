@@ -1,0 +1,130 @@
+---
+- name: Install and configure Tomcat 9 manually
+  hosts: localhost
+  connection: local
+  become: yes
+  vars:
+    max_heap: "{{ '512m' if env == 'PROD' else '256m' }}"
+    jdk_tarball: https://download.bell-sw.com/java/8u382+6/bellsoft-jdk8u382+6-linux-amd64.tar.gz
+    tomcat_url: https://archive.apache.org/dist/tomcat/tomcat-9/v9.0.87/bin/apache-tomcat-9.0.87.tar.gz
+    tomcat_dir: /opt/tomcat9
+
+  tasks:
+    - name: Ensure required packages are installed
+      apt:
+        name:
+          - curl
+          - tar
+        state: present
+        update_cache: yes
+        force_apt_get: yes
+        allow_unauthenticated: yes
+
+    - name: Download and extract OpenJDK 8
+      get_url:
+        url: "{{ jdk_tarball }}"
+        dest: /opt/jdk8.tar.gz
+      register: jdk_download
+
+    - name: Extract JDK tarball
+      unarchive:
+        src: /opt/jdk8.tar.gz
+        dest: /opt/
+        remote_src: yes
+
+    - name: Find extracted JDK directory
+      find:
+        paths: /opt
+        patterns: 'jdk8u382*'
+        file_type: directory
+      register: jdk_dir
+
+    - name: Fail if JDK not found
+      fail:
+        msg: "JDK not found after extraction"
+      when: jdk_dir.matched == 0
+
+    - name: Set JAVA_HOME
+      set_fact:
+        java_home_path: "{{ jdk_dir.files[0].path }}"
+
+    - name: Configure Java alternatives
+      command: update-alternatives --install /usr/bin/java java {{ java_home_path }}/bin/java 1
+      args:
+        creates: /usr/bin/java
+
+    - name: Create 'tomcat' system user
+      user:
+        name: tomcat
+        shell: /bin/false
+        system: yes
+
+    - name: Download and extract Tomcat
+      get_url:
+        url: "{{ tomcat_url }}"
+        dest: /tmp/tomcat.tar.gz
+
+    - name: Extract Tomcat archive
+      unarchive:
+        src: /tmp/tomcat.tar.gz
+        dest: /opt/
+        remote_src: yes
+
+    - name: Rename Tomcat directory
+      command: mv /opt/apache-tomcat-9.0.87 {{ tomcat_dir }}
+      args:
+        creates: "{{ tomcat_dir }}"
+
+    - name: Fix ownership of Tomcat directory
+      file:
+        path: "{{ tomcat_dir }}"
+        owner: tomcat
+        group: tomcat
+        recurse: yes
+
+    - name: Configure Tomcat to listen on all interfaces
+      replace:
+        path: "{{ tomcat_dir }}/conf/server.xml"
+        regexp: '(<Connector port="8080")'
+        replace: '\1 address="0.0.0.0"'
+
+    - name: Create Tomcat systemd service
+      copy:
+        dest: /etc/systemd/system/tomcat.service
+        content: |
+          [Unit]
+          Description=Apache Tomcat 9
+          After=network.target
+
+          [Service]
+          Type=forking
+          User=tomcat
+          Group=tomcat
+          Environment=JAVA_HOME={{ java_home_path }}
+          Environment=CATALINA_PID={{ tomcat_dir }}/temp/tomcat.pid
+          Environment=CATALINA_HOME={{ tomcat_dir }}
+          Environment=CATALINA_BASE={{ tomcat_dir }}
+          Environment='CATALINA_OPTS=-Xms{{ max_heap }} -Xmx{{ max_heap }} -server -XX:+UseParallelGC'
+          ExecStart={{ tomcat_dir }}/bin/startup.sh
+          ExecStop={{ tomcat_dir }}/bin/shutdown.sh
+
+          [Install]
+          WantedBy=multi-user.target
+
+    - name: Reload systemd daemon
+      command: systemctl daemon-reexec
+      ignore_errors: yes
+
+    - name: Enable and start Tomcat service
+      systemd:
+        name: tomcat
+        enabled: yes
+        state: started
+
+    - name: Deploy WAR application
+      copy:
+        src: /data/war/sample.war
+        dest: "{{ tomcat_dir }}/webapps/sample.war"
+        owner: tomcat
+        group: tomcat
+        mode: '0644'
