@@ -4,6 +4,13 @@
 Automates the setup of Tomcat 9 on a legacy Debian Jessie system. Runs Ansible inside a Docker container to simulate a production-like environment and deploy a WAR file with environment-specific JVM settings.
 
 
+## Table of Contents
+
+* [Overview](#overview)
+* [Structure](#structure)
+* [Setup](#setup)
+* [Environment Configs](#environment-configs)
+* [Author](#author)
 
 ## Overview
 
@@ -19,15 +26,6 @@ JVM heap size is set automatically:
 
 * `DEV`: `-Xms256m -Xmx256m`
 * `PROD`: `-Xms512m -Xmx512m`
-
-
-## Table of Contents
-
-* [Structure](#structure)
-* [Setup](#setup)
-* [Environment Configs](#environment-configs)
-* [Author](#author)
-
 
 ## Structure
 
