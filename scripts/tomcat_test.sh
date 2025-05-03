@@ -26,7 +26,7 @@ echo "Checking application home page"
 echo "---------------------------------"
 sleep 5
 if curl -fs http://localhost:8080/sample/ >/dev/null; then
-  echo "Sample app is reachable ✔"
+  echo "Sample app is reachable"
 else
   echo "Failed to reach Tomcat sample app"
 fi
