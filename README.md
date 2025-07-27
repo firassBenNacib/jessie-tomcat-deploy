@@ -73,5 +73,5 @@ Use `PROD` to simulate a production environment.
 
 ## Author
 
-Created and maintained by [Firas Ben Nacib](https://github.com/firassBenNacib) – [bennacibfiras@gmail.com](mailto:bennacibfiras@gmail.com)
+Created and maintained by [Firas Ben Nacib](https://github.com/firassBenNacib) - [bennacibfiras@gmail.com](mailto:bennacibfiras@gmail.com)
 
